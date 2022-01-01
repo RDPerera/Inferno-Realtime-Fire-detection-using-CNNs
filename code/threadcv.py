@@ -68,6 +68,7 @@ class VideoStream:
         # otherwise, we are using OpenCV so initialize the webcam
         # stream
         else:
+            #self.stream=cv2.VideoCapture('http://192.168.1.4:4747/video')
             self.stream = WebcamVideoStream(src=src)
 
     def start(self):
@@ -98,9 +99,9 @@ from threading import Thread
 import numpy as np
 import time
 import os
-from picamera.array import PiRGBArray
-from picamera import PiCamera
-from imutils.video.pivideostream import PiVideoStream
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
+# from imutils.video.pivideostream import PiVideoStream
 import datetime
 from pygame import mixer
  
@@ -115,13 +116,15 @@ FIRE = False
 
 # load the model
 print("[INFO] loading model...")
-MODEL_PATH = '/home/pi/Desktop/raks_model14.h5'
+MODEL_PATH = '../saved_model/raks_model14.h5'
 model = keras.models.load_model(MODEL_PATH)
 
 # initialize the video stream and allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-#vs = VideoStream(src=0).start()
-vs = VideoStream(usePiCamera=True).start()
+#vs = cv2.VideoCapture('http://192.168.1.4:4747/video')
+vs = VideoStream(src=0).start()
+
+
 time.sleep(2.0)
 start = time.time()
 #fps = FPS().start()
@@ -131,7 +134,7 @@ f = 0
 while True:
     # grab the frame from the threaded video stream and resize it
     # to have a maximum width of 400 pixels
-    frame = vs.read()
+    ret,frame = vs.read()
     #A variable f to keep track of total number of frames read
     f += 1
     frame = imutils.resize(frame, width=400)
